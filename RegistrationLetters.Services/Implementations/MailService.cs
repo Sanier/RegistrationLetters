@@ -85,58 +85,54 @@ namespace RegistrationLetters.Services.Implementations
         {
             try
             {
-                //It’s worth changing it to your full name later
-                //Then you should put it in a separate method
-                var adressee = await _employeeRepository.Get()
-                    .Where(e => (e.Id == employeeModel.Id)
-                    || (e.FirstName == employeeModel.FirstName
-                    && e.LastName == employeeModel.LastName))
-                    .Select(e => new EmployeeModel
-                    {
-                        Id = e.Id,
-                        FirstName = e.FirstName,
-                        LastName = e.LastName,
-                        JobPosition = e.JobPosition
-                    })
-                    .ToListAsync();
-
-                //The operations below will take a long time to complete, but for now they are working demo
-                var senderId = await _mailRepository.Get()
-                    .FirstOrDefaultAsync(e => e.Id == adressee[0].Id);
-
-                //Then you should put it in a separate method
-                var sender = await _employeeRepository.Get()
-                    .Where(s => s.Id == senderId.SenderId)
-                    .Select(s => new EmployeeModel
-                    {
-                        Id = s.Id,
-                        FirstName = s.FirstName,
-                        LastName = s.LastName,
-                        JobPosition = s.JobPosition
-                    })
-                    .ToListAsync();
-
-                if (adressee == null || sender == null)
+                if (employeeModel == null)
                     throw new ArgumentNullException("Employee is not found");
+
+                var adressee = await _employeeRepository.Get()
+                .Where(e => (e.Id == employeeModel.Id)
+                || (e.FirstName == employeeModel.FirstName
+                && e.LastName == employeeModel.LastName))
+                .Select(e => new EmployeeModel
+                {
+                    Id = e.Id,
+                    FirstName = e.FirstName,
+                    LastName = e.LastName,
+                    JobPosition = e.JobPosition
+                }).ToListAsync();
 
                 var mail = await _mailRepository.Get()
-                    .Where(a => a.AddresseeId == adressee[0].Id)
-                    .Select(a => new MailModel
-                    {
-                        Title = a.Title,
-                        Content = a.Content,
+                    .Where(a => a.AddresseeId == adressee[0].Id).ToListAsync();
+
+                List<MailModel> mailModels = new List<MailModel>();
+
+                foreach(var m in mail)
+                {
+                    var sender = await _employeeRepository.Get()
+                        .Where(s => s.Id == m.SenderId)
+                        .Select(s => new EmployeeModel
+                        {
+                            Id = s.Id,
+                            FirstName = s.FirstName,
+                            LastName = s.LastName,
+                            JobPosition = s.JobPosition
+                        })
+                        .ToListAsync();
+
+                    var mailAdressee = new MailModel()
+                    {   
+                        Title = m.Title,
+                        Content = m.Content,
                         Addressee = adressee[0],
                         Sender = sender[0]
-                    })
-                    .ToListAsync();
+                    };
 
-                if (!mail.Any())
-                    throw new ArgumentNullException("Employee is not found");
+                    mailModels.Add(mailAdressee);
+                }
 
                 return new BaseResponse<IEnumerable<MailModel>>()
                 {
                     //This will need to be corrected, because... it eats up memory
-                    Data = mail,
+                    Data = mailModels,
                     StatusCode = StatusCode.Success
                 };
             }
