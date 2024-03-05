@@ -1,0 +1,18 @@
+﻿<Page x:Class="RegistrationLetters.Client.View.Authorization"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RegistrationLetters.Client.View"
+      mc:Ignorable="d"
+      Title="Authorization" Height="210" Width="238" HorizontalAlignment="Center" VerticalAlignment="Center">
+
+    <Grid Margin="0,0,0,10">
+        <Button x:Name="btnLogin" Content="Войти" HorizontalAlignment="Left" Margin="29,135,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.424,0.546" Width="80" Click="btnLogin_Click"/>
+        <Button x:Name="btnRegistration" Content="Регистрация" HorizontalAlignment="Left" Margin="116,135,0,0" VerticalAlignment="Top" Width="81" Click="btnRegistration_Click"/>
+        <Label x:Name="lblFirstName" Content="Введите свое имя" HorizontalAlignment="Left" Margin="29,26,0,0" VerticalAlignment="Top" Width="168"/>
+        <Label x:Name="lblLastName" Content="Введите свою фамилию" HorizontalAlignment="Left" Margin="29,75,0,0" VerticalAlignment="Top" Width="168"/>
+        <TextBox x:Name="txbLastName" HorizontalAlignment="Left" Margin="29,101,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="168"/>
+        <TextBox x:Name="txbFirstName" HorizontalAlignment="Left" Margin="29,57,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="168"/>
+    </Grid>
+</Page>
